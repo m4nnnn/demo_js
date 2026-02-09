@@ -11,6 +11,9 @@ const products = [
 
 const searchInput = document.getElementById('search')
 const productList = document.getElementById('product-list')
+const categoryFilter = document.getElementById('category-filter')
+const colorFilter = document.getElementById('color-filter')
+const applyBtn = document.getElementById('apply')
 
 
 // affichage des produits
@@ -22,20 +25,38 @@ function displayProducts(list) {
     }
     list.forEach(p => {
         const li = document.createElement('li')
-        li.textContent = p.name;
+        li.textContent = `${p.name} - ${p.category} - ${p.color}`
         productList.appendChild(li)
     })
 }
 
-// recherche
-function searchProducts() {
+// recherche + tri
+function searchAndSort() {
     const keyword = searchInput.value.toLowerCase()
-    const result = products.filter(p =>
-        p.name.toLowerCase().includes(keyword)
-    )
+    const category = categoryFilter.value
+    const color = colorFilter.value
+    let result = products
+
+    if (category !== 'tous') {
+        result = result.filter(p => p.category === category)
+    }
+
+    if (color !== 'tous') {
+        result = result.filter(p => p.color === color)
+    }
+
+    if (keyword) {
+        result = result.filter(p => p.name.toLowerCase().includes(keyword))
+    }
+
     displayProducts(result)
 }
 
-searchInput.addEventListener('input', searchProducts)
+searchInput.addEventListener('input', searchAndSort)
+applyBtn.addEventListener('click', searchAndSort)
 
 displayProducts(products)
+
+
+
+
